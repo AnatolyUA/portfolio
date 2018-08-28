@@ -5,6 +5,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin'); //installed via npm
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const StyleExtHtmlWebpackPlugin = require('style-ext-html-webpack-plugin');
 
 const buildPath = path.resolve(__dirname, 'docs');
 
@@ -26,14 +27,25 @@ module.exports = {
                     presets: ['env']
                 }
             },
+
+
+            /*
             {
                 test: /\.(scss|css|sass)$/,
-                use: ExtractTextPlugin.extract({
+                use: ['style-loader', 'css-loader',  'postcss-loader', 'sass-loader', ]
+            }, */
+
+            
+            {
+                test: /\.(scss|css|sass)$/,
+                
+                loader: ExtractTextPlugin.extract({
                     use: [
                         {
                             // translates CSS into CommonJS
                             loader: 'css-loader',
                             options: {
+                                includeAt:'top',
                                 sourceMap: true
                             }
                         },
@@ -55,8 +67,11 @@ module.exports = {
                         }
                     ],
                     fallback: 'style-loader'
-                }),
+                }),                
             },
+            
+
+
             {
                 // Load all images as base64 encoding if they are smaller than 8192 bytes
                 test: /\.(png|jpg|gif)$/,
@@ -69,6 +84,10 @@ module.exports = {
                         }
                     }
                 ]
+            },
+            {
+                test: /\.mp4$/,
+                use: 'file-loader?name=videos/[name].[ext]',
             }
         ]
     },
@@ -92,7 +111,7 @@ module.exports = {
             // favicon background color (see https://github.com/haydenbleasel/favicons#usage)
             background: '#fff',
             // favicon app title (see https://github.com/haydenbleasel/favicons#usage)
-            title: '{{projectName}}',
+            title: 'Pashmorga Anatoly Portfolio',
 
             // which icons should be generated (see https://github.com/haydenbleasel/favicons#usage)
             icons: {
@@ -108,9 +127,11 @@ module.exports = {
                 windows: false
             }
         }),
+        
         new ExtractTextPlugin('styles.[md5:contenthash:hex:20].css', {
             allChunks: true
         }),
+        
         new OptimizeCssAssetsPlugin({
             cssProcessor: require('cssnano'),
             cssProcessorOptions: {
@@ -122,6 +143,6 @@ module.exports = {
                 }
             },
             canPrint: true
-        })
+        })        
     ]
 };

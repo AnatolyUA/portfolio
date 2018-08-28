@@ -26,6 +26,7 @@ module.exports = {
                         // creates style nodes from JS strings
                         loader: "style-loader",
                         options: {
+                            insertAt: 'top',
                             sourceMap: true
                         }
                     },
@@ -62,6 +63,10 @@ module.exports = {
                         }
                     }
                 ]
+            },
+            {
+                test: /\.mp4$/,
+                use: 'file-loader?name=videos/[name].[ext]',
             }
         ],
     },
